@@ -156,6 +156,11 @@ Fields:
 - `cb::Function`: a callback function that is called after event evaluation (expects `(neuron_id, t)` as input)
 - `dense::Bool`: set to `true` to evaluate every time step even in the absence of events
 """
+#using Cthulhu: @descend
+#using Base: @noinline # already exported, but be explcit
+using Infiltrator: @infiltrate
+using Cthulhu: @descend
+using Base: @noinline # already exported, but be explcit
 function simulate!(pop::Population, T::Integer; dt::Real = 1.0, cb = () -> (), dense = false, inputs = nothing)
     spiketimes = Dict([(i, Int[]) for i in 1:size(pop)])
 
@@ -164,6 +169,7 @@ function simulate!(pop::Population, T::Integer; dt::Real = 1.0, cb = () -> (), d
         cb()
 
         # evaluate population once
+
         spikes = evaluate!(pop, t; dt = dt, dense = dense, inputs = inputs)
 
         # record spike time
